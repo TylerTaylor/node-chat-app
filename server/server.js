@@ -15,14 +15,15 @@ let io = socketIO(server)
 io.on('connection', (socket) => {
   console.log('New user connected')
 
-  socket.emit('newMessage', {
-    from: 'Nick',
-    text: 'See you later',
-    createdAt: 123123
-  })
-
   socket.on('createMessage', (message) => {
     console.log('createMessage', message)
+
+    // emit the new message
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    })
   })
 
   socket.on('disconnect', () => {
