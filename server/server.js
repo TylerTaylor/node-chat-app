@@ -15,6 +15,20 @@ let io = socketIO(server)
 io.on('connection', (socket) => {
   console.log('New user connected')
 
+  // welcome to the chat app
+  socket.emit('newMessage', {
+    from: 'Admin',
+    text: 'Welcome to the chat app',
+    createdAt: new Date().getTime()
+  })
+
+  // broadcast to other users that user joined the chat
+  socket.broadcast.emit('newMessage', {
+    from: 'Admin',
+    text: 'New user joined',
+    createdAt: new Date().getTime()
+  })
+
   socket.on('createMessage', (message) => {
     console.log('createMessage', message)
 
@@ -24,6 +38,13 @@ io.on('connection', (socket) => {
       text: message.text,
       createdAt: new Date().getTime()
     })
+
+    // broadcast the new message
+    // socket.broadcast.emit('newMessage', {
+    //   from: message.from,
+    //   text: message.text,
+    //   createdAt: new Date().getTime()
+    // })
   })
 
   socket.on('disconnect', () => {
